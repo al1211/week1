@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pokemon Cards</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      text-align: center;
+    }
+    .card {
+      display: inline-block;
+      background: #222;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      width: 150px;
+    }
+    img {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Pokemon Card App</h1>
+
+<input type="number" id="count" placeholder="Enter number" />
+<input type="text" id="type" placeholder="Enter type (fire, water)" />
+<button onclick="fetchPokemon()">Show</button>
+
+<div id="pokemon-container"></div>
+
+<script>
+async function fetchPokemon() {
+    const count = document.getElementById('count').value;
+    const typeInput = document.getElementById('type').value.toLowerCase();
+    const container = document.getElementById('pokemon-container');
+
+    container.innerHTML = "";
+
+    let found = 0;
+    let id = 1;
+
+    while (found < count && id <= 500) {
+        try {
+            const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            const data = await res.json();
+
+            const types = data.types.map(t => t.type.name);
+
+            if (!typeInput || types.includes(typeInput)) {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                card.innerHTML = `
+                    <h3>${data.name}</h3>
+                    <img src="${data.sprites.front_default}" />
+                    <p>Type: ${types.join(', ')}</p>
+                `;
+
+                container.appendChild(card);
+                found++;
+            }
+
+            id++;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+}
+</script>
+
+</body>
+</html>
