@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bg-changer</title>
+</head>
+<style>
+    body {
+        background: #111;
+        color: white;
+        text-align: center;
+        font-family: Arial;
+    }
+    button {
+        margin: 5px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .footer{
+        position:absolute;
+        bottom:20px;
+        left: 50%;
+        transform: translateX(-50%);
+       
+    }
+</style>
+<body>
+    <div></div>
+    <footer class="footer">
+        <button class="red">Red</button>
+        <button class="yellow">Yellow</button>
+        <button class="black">Black</button>
+        <button class="purple">Purple</button>
+        <button class="green">Green</button>
+        <button class="blue">Blue</button>
+        <button class="default">Default</button>
+    </fotter>
+
+    <script>
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const color = button.className;
+                if (color === 'default') {
+                    document.body.style.background = '#111';
+                } else {
+                    document.body.style.background = color;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
