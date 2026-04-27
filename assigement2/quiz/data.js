@@ -39,55 +39,58 @@ const submitBtn = document.getElementById("submitBtn");
 const resultDiv = document.getElementById("result");
 
 let currentQuestion = 0;
+let score = 0;
 
 // Render questions
-function loadQuiz() {
-    const q = quizData[currentQuestion];
-    quizContainer.innerHTML = `
-      <div class="question">
-        <p>${currentQuestion + 1}. ${q.question}</p>
-        <div class="options">
-          <label>
-            <input type="radio" name="q${currentQuestion}" value="a">
-            ${q.a}
-          </label>
-          <label>
-            <input type="radio" name="q${currentQuestion}" value="b">  
-            ${q.b}
-          </label>
-          <label>
-            <input type="radio" name="q${currentQuestion}" value="c">
-            ${q.c}
-          </label>
-          <label>
-            <input type="radio" name="q${currentQuestion}" value="d">
-            ${q.d}
-          </label>
-        </div>
-      </div>
-    `;
+function loadQuestion() {
+  let data = quizData[currentQuestion];
+
+  document.getElementById("question").innerText = data.question;
+  document.getElementById("a").innerText = data.a;
+  document.getElementById("b").innerText = data.b;
+  document.getElementById("c").innerText = data.c;
+  document.getElementById("d").innerText = data.d;
 }
 
 // Load all questions at once (optional)        
-            
+ function getSelected() {
+  let answers = document.querySelectorAll("input[name='answer']");
+  let selected = null;
+
+  answers.forEach(ans => {
+    if (ans.checked) {
+      selected = ans.value;
+    }
+  });
+
+  return selected;
+}           
 
  
 
 
 // Calculate result
-submitBtn.addEventListener("click", () => {
-  let score = 0;
+document.getElementById("submit").addEventListener("click", () => {
+  let answer = getSelected();
 
-  quizData.forEach((q, index) => {
-    const selected = document.querySelector(`input[name="q${index}"]:checked`);
-    
-    if (selected && selected.value === q.correct) {
+  if (answer) {
+    if (answer === quizData[currentQuestion].correct) {
       score++;
     }
-});
-currentQuestion++;
 
-  resultDiv.innerText = `Your Score: ${score} / ${quizData.length}`;
+    currentQuestion++;
+
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      document.getElementById("quiz").innerHTML =
+        `<h2>Your Score: ${score}/${quizData.length}</h2>`;
+    }
+  }
 });
 
-loadQuiz();
+loadQuestion();
+
+
+
+
