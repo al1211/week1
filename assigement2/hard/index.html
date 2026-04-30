@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Task Board UI</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .board {
+      display: flex;
+      gap: 20px;
+    }
+
+    .column {
+      background: #e3e7ed;
+      padding: 15px;
+      border-radius: 10px;
+      width: 30%;
+      min-height: 400px;
+    }
+
+    .column h3 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .tasks {
+      min-height: 200px;
+    }
+
+    .task {
+      background: white;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      cursor: grab;
+    }
+
+    .task:active {
+      cursor: grabbing;
+    }
+
+    .add-task {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .add-task button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    .text {
+      width: 100%;
+      height: 40px;
+      border-radius: 20px;
+      border: none;
+      padding: 0 15px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Task Management Board</h2>
+
+<div class="board">
+
+  <!-- Todo -->
+  <div class="column">
+    <h3>Todo</h3>
+
+    <input type="text" class="text" placeholder="Enter task..." />
+    <div class="add-task">
+      <button class="add">Add Task</button>
+    </div>
+
+    <div class="tasks" id="todo">
+      <div class="task" draggable="true" id="task-1">Learn JS</div>
+    </div>
+  </div>
+
+  <!-- In Progress -->
+  <div class="column">
+    <h3>In Progress</h3>
+
+    <div class="tasks" id="progress">
+      <div class="task" draggable="true" id="task-2">React Project</div>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="column">
+    <h3>Done</h3>
+
+    <div class="tasks" id="done">
+      <div class="task" draggable="true" id="task-3">HTML Basics</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const input = document.querySelector(".text");
+const addBtn = document.querySelector(".add");
+const todo = document.querySelector("#todo");
+
+// Add Task
+addBtn.addEventListener("click", () => {
+  if (!input.value) {
+    alert("Enter task first");
+    return;
+  }
+
+  const task = document.createElement("div");
+  task.className = "task";
+  task.innerText = input.value;
+  task.setAttribute("draggable", "true");
+  task.id = "task-" + Date.now();
+
+  todo.appendChild(task);
+  input.value = "";
+});
+
+// Drag Start
+document.addEventListener("dragstart", (e) => {
+  if (e.target.classList.contains("task")) {
+    e.dataTransfer.setData("text", e.target.id);
+  }
+});
+
+// Drop logic for all columns
+const allTasksContainers = document.querySelectorAll(".tasks");
+
+allTasksContainers.forEach((container) => {
+
+  container.addEventListener("dragover", (e) => {
+    e.preventDefault();
+  });
+
+  container.addEventListener("drop", (e) => {
+    e.preventDefault();
+
+    const id = e.dataTransfer.getData("text");
+    const dragged = document.getElementById(id);
+
+    container.appendChild(dragged);
+  });
+
+});
+</script>
+
+</body>
+</html>
